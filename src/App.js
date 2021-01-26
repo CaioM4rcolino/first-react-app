@@ -3,45 +3,69 @@ import { useState } from "react";
 
 function ToDoList(){
 
-  const [taskList, setTaskList] = useState([
-    {
-      id: 1,
-      description: "Estudar Inglês",
-    },
-  ]);
+  const [taskList, setTaskList] = useState([]);
+
+  const handleInsert = (description) =>{
+
+    const newId = taskList.length === 0 ? 1 : taskList[taskList.length - 1].id + 1;
+
+    const task = {
+      id: newId,
+      description,
+    }
+    setTaskList([...taskList, task]);
+  }
+
+  const handleRemove = (id) =>{
+    setTaskList(taskList.filter(task => task.id !== id))
+  }
 
     return(
       <div className="container">
-        <Form/>
-        <List list={taskList}/>
+        <Form handleInsert={handleInsert}/>
+        <List list={taskList} handleRemove={handleRemove}/>
       </div>
     )
 }
 
-function Form(){
+function Form({handleInsert}){
+  
+ const [newTask, setNewTask] = useState("");
+ 
+ const handleNewTask = (e) => {
+   setNewTask(e.target.value)
+ }
+
+ const handleSubmit = (e) =>{
+    e.preventDefault();
+
+    handleInsert(newTask);
+ };
+
   return(
   
-    <form className="form">
-        <input type="text"/>
-        <button>OK</button>
+    <form className="form" onSubmit={handleSubmit}>
+        <input type="text" onChange={handleNewTask} required/>
+        <button onC>OK</button>
     </form>
   
   );
 }
 
-function List({list}){
+function List({list, handleRemove}){
   return(
     <section>
-      {list.map(item => <Item task={item}/>)}
+      {list.length === 0 && "Você não tem tarefas."}
+      {list.map(item => <Item task={item} handleRemove={handleRemove}/>)}
     </section>
   )
 }
 
-function Item({task}){
+function Item({task, handleRemove}){
   return(
     <article class="item">
       <p>{task.id} - {task.description}</p>
-      <span>&times;</span>
+      <span onClick={() => handleRemove(task.id)}>&times;</span>
     </article>
   );
 }

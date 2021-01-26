@@ -1,6 +1,13 @@
 import "./App.css";
 import { useState } from "react";
 
+function InitialMessage(){
+  return(
+
+    <p class="initialmessage">Você não tem tarefas.</p>
+
+  );
+}
 function ToDoList(){
 
   const [taskList, setTaskList] = useState([]);
@@ -55,7 +62,7 @@ function Form({handleInsert}){
 function List({list, handleRemove}){
   return(
     <section>
-      {list.length === 0 && "Você não tem tarefas."}
+      {list.length === 0 && <InitialMessage/>}
       {list.map(item => <Item task={item} handleRemove={handleRemove}/>)}
     </section>
   )

@@ -2,6 +2,12 @@
     border: 1px solid black;
 }
 
+.initialmessage{
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
 .form{
     
     display: flex;

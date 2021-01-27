@@ -1,18 +1,31 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function InitialMessage(){
-  return(
+function InitialMessage() {
+  return (
 
-    <p class="initialmessage">Você não tem tarefas.</p>
+    <p className="initialmessage">Você não tem tarefas.</p>
 
   );
 }
-function ToDoList(){
+
+function ToDoList() {
 
   const [taskList, setTaskList] = useState([]);
+  const [inputTask, setInputTask] = useState({ id: "", description: "" });
 
-  const handleInsert = (description) =>{
+  window.addEventListener("beforeunload", () => {
+    localStorage.setItem("lista", JSON.stringify(taskList))
+  })
+
+  useEffect(() => {
+
+    setTaskList(JSON.parse(localStorage.getItem("lista")))
+
+
+  }, []);
+
+  const handleInsert = (description) => {
 
     const newId = taskList.length === 0 ? 1 : taskList[taskList.length - 1].id + 1;
 
@@ -23,56 +36,106 @@ function ToDoList(){
     setTaskList([...taskList, task]);
   }
 
-  const handleRemove = (id) =>{
+  const handleRemove = (id) => {
     setTaskList(taskList.filter(task => task.id !== id))
   }
 
-    return(
-      <div className="container">
-        <Form handleInsert={handleInsert}/>
-        <List list={taskList} handleRemove={handleRemove}/>
-      </div>
-    )
+
+  const fillForm = (task) => {
+    setInputTask(task)
+  }
+
+  const handleEdit = () => {
+    setTaskList(
+      taskList.map((task) => (task.id === inputTask.id ? inputTask : task))
+    );
+  }
+
+  return (
+    <div className="container">
+      <Form
+        handleInsert={handleInsert}
+        newTask={inputTask}
+        setNewTask={setInputTask}
+        handleEdit={handleEdit}
+      />
+      <List
+        list={taskList}
+        handleRemove={handleRemove}
+        fillForm={fillForm}
+      />
+    </div>
+  )
 }
 
-function Form({handleInsert}){
-  
- const [newTask, setNewTask] = useState("");
- 
- const handleNewTask = (e) => {
-   setNewTask(e.target.value)
- }
+function Form({ handleInsert, newTask, setNewTask, handleEdit }) {
 
- const handleSubmit = (e) =>{
+  const handleNewTask = (e) => {
+    setNewTask({ ...newTask, description: e.target.value })
+  }
+
+  const handleSubmit = (e) => {
+
+    const inputBox = document.getElementById("inputBox");
     e.preventDefault();
 
-    handleInsert(newTask);
- };
+    if (newTask.id === "") {
+      handleInsert(newTask.description);
+    }
+    else {
+      handleEdit()
+    }
 
-  return(
-  
+    setNewTask({ id: "", description: "" })
+
+    inputBox.value = ""
+  };
+
+  return (
+
     <form className="form" onSubmit={handleSubmit}>
-        <input type="text" onChange={handleNewTask} required/>
-        <button onC>OK</button>
+      <input
+        id="inputBox"
+        value={newTask.description}
+        type="text"
+        onChange={handleNewTask}
+        required
+      />
+      <button>OK</button>
     </form>
-  
+
   );
 }
 
-function List({list, handleRemove}){
-  return(
+function List({ list, handleRemove, fillForm }) {
+  return (
     <section>
-      {list.length === 0 && <InitialMessage/>}
-      {list.map(item => <Item task={item} handleRemove={handleRemove}/>)}
+      {list.length === 0 && <InitialMessage />}
+      {list.map((item, index) => (
+        <Item
+          key={item.id}
+          task={item}
+          index={index}
+          handleRemove={handleRemove}
+          fillForm={fillForm} />
+      ))}
     </section>
   )
 }
 
-function Item({task, handleRemove}){
-  return(
-    <article class="item">
-      <p>{task.id} - {task.description}</p>
-      <span onClick={() => handleRemove(task.id)}>&times;</span>
+function Item({ task, handleRemove, fillForm, index }) {
+  return (
+    <article className="item">
+      <p>{index + 1} - {task.description}</p>
+
+      <div>
+        <span style={{ fontSize: 25 }} onClick={() => fillForm(task)}>
+          &#9998;
+        </span>
+        <span onClick={() => handleRemove(task.id)}>&times;</span>
+      </div>
+
+
     </article>
   );
 }

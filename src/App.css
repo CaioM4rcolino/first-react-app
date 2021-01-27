@@ -1,64 +1,64 @@
-.container{
+.container {
     border: 1px solid black;
-}
-
-.initialmessage{
+    width: 30%;
+    min-width: 350px;
+  }
+  
+  .initialmessage{
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-}
-
-.form{
-    
+  }
+  
+  
+  .form {
     display: flex;
+  
     flex-direction: row;
-
+  
     margin: 10px 0px;
-
-    border-bottom: 1px solid black;
-
-    padding: 5px;
-    box-sizing: border-box;
-
+  
     gap: 10px;
-}
-
-.form > input{
+  }
+  
+  .form > input {
     flex: 4;
     height: 20px;
-}
-
-.form > button{
+    padding: 10px;
+  
+    font-size: 16px;
+  }
+  
+  .form > button {
     flex: 1;
-}
-
-
-.item{
+  }
+  
+  .item {
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
-}
-
-
-.item > p{
-    font-size: 16px;
+  
+    border: 1px solid black;
+    margin-bottom: 5px;
+  }
+  
+  .item > p {
+    font-size: 20px;
     font-weight: bold;
+  
     margin-left: 10px;
-    user-select: none;
-
-}
-
-.item > span{
+  }
+  
+  .item > div > span {
     font-size: 30px;
     font-weight: bold;
+    margin-right: 10px;
+  
     cursor: pointer;
-    margin-right: 5px;
     transition: 0.2s;
-    user-select: none;
-
-}
-
-.item > span:hover{
+  }
+  
+  .item > div > span:hover {
     color: red;
-}
+  }
+  
